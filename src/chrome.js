@@ -3,13 +3,17 @@ var By = webdriver.By;
 var Until = webdriver.until;
 var base64 = require("base64-img");
 var sleep = require("sleep");
+var ipAddress = "127.0.0.1";
+
+const init = function (confObj) {
+	ipAddress = confObj.ip;
+	if (process.env.CI_BUILD_ID != undefined) {
+		ipAddress = confObj.ci_ip;
+	}
+}
 
 const getBrowser = function (url) {
 	//172.17.0.2
-	var ipAddress = "127.0.0.1";
-	if (process.env.GITLAB_CI == "true" || process.env.GITLAB_CI == true) {
-		ipAddress = "172.17.0.2";
-	}
 	var driver = new webdriver.Builder().forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
 	driver.get(url).then(function (res) {
 		console.log(res,"======");
@@ -36,10 +40,16 @@ const takeScreenshot = function (driver,folderName,fileName) {
 	})
 }
 
+const executeScript = function (driver,script) {
+	return driver.executeScript(script);
+}
+
 module.exports = {
 	getBrowser,
 	openUrl,
-	takeScreenshot
+	takeScreenshot,
+	executeScript,
+	init
 }
 
 // var driver = getBrowser("http://www.google.com");
