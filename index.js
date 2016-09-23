@@ -29,13 +29,11 @@ const run = function(confObj) {
 	chrome.init(confObj);
 	var driver = chrome.getBrowser(url);
 	chrome.executeScript(driver,confObj.script).then(function (urls) {
-		if (!isTest) {
-			for (var i=0;i<urls.length;i++) {
-				console.log(urls[i],"----->>>>---->>>>")
-				chrome.openUrl(driver,urls[i]);
-				var fileName = urls[i].split("?")[1];
-				chrome.takeScreenshot(driver,folderName,fileName)
-			}
+		for (var i=0;i<urls.length;i++) {
+			console.log(urls[i],"----->>>>---->>>>")
+			chrome.openUrl(driver,urls[i]);
+			var fileName = urls[i].split("?")[1];
+			chrome.takeScreenshot(driver,folderName,fileName)
 		}
 		driver.quit().then(function () {
 			if (isTest) {
