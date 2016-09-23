@@ -13,7 +13,6 @@ const init = function (confObj) {
 }
 
 const getBrowser = function (url) {
-	//172.17.0.2
 	var driver = new webdriver.Builder().forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
 	driver.get(url).then(function (res) {
 		console.log(res,"======");

@@ -20,12 +20,6 @@ const getDiff = function(mainFile, testFile, diffFile,res) {
 			return false;
 		}
 		if (result.percentage) {
-			console.log(base64Img.base64Sync(mainFile));
-			console.log("\n\n\n");
-			console.log(base64Img.base64Sync(testFile));
-			console.log("\n\n\n");
-			console.log(base64Img.base64Sync(diffFile));
-			console.log("\n\n\n");
 			console.log(chalk.red.bold("\u2715 : "+testFile),"\n\t",result);
 			return false;
 		}
