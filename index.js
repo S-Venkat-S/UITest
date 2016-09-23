@@ -5,31 +5,32 @@ var path = require("path");
 var fs = require("fs");
 var args = process.argv.splice(2);
 
-var urlExtn = "http://venkat-zt74:8000/build/DocumentationPage.html";
+const run = function() {
+	var urlExtn = "http://venkat-zt74:8000/build/DocumentationPage.html";
 
-if (process.env.CI_BUILD_ID != undefined) {
-	urlExtn = "http://tsi-desk-u14:8080/React_Coverage/"+process.env.CI_BUILD_ID+"_docs/DocumentationPage.html"
-}
-
-var isTest = (args[0] == "test");
-var folderName = isTest ? "test" : "reference";
-
-var urls = [urlExtn+"?dashboard__AgentsListComponents"];
-
-var driver = chrome.getBrowser("http://tsi-desk-u14:8080/");
-for (var i=0;i<urls.length;i++) {
-	console.log(urls[i],"----->>>>---->>>>")
-	chrome.openUrl(driver,urls[i]);
-	var fileName = urls[i].split("?")[1];
-	chrome.takeScreenshot(driver,folderName,fileName)
-}
-
-driver.quit().then(function () {
-	if (isTest) {
-		test();
+	if (process.env.CI_BUILD_ID != undefined) {
+		urlExtn = "http://tsi-desk-u14:8080/React_Coverage/"+process.env.CI_BUILD_ID+"_docs/DocumentationPage.html"
 	}
-});
 
+	var isTest = (args[0] == "test");
+	var folderName = isTest ? "test" : "reference";
+
+	var urls = [urlExtn+"?dashboard__AgentsListComponents"];
+
+	var driver = chrome.getBrowser("http://tsi-desk-u14:8080/");
+	for (var i=0;i<urls.length;i++) {
+		console.log(urls[i],"----->>>>---->>>>")
+		chrome.openUrl(driver,urls[i]);
+		var fileName = urls[i].split("?")[1];
+		chrome.takeScreenshot(driver,folderName,fileName)
+	}
+
+	driver.quit().then(function () {
+		if (isTest) {
+			test();
+		}
+	});
+}
 const test = function () {
 	var testFolderName = process.env.PWD+path.sep+"test";
 	var refFolderName = process.env.PWD+path.sep+"reference";
@@ -47,4 +48,8 @@ const test = function () {
 			clearInterval(interval);
 		}
 	},1000)
+}
+
+module.exports = {
+	run
 }
