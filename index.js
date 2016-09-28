@@ -61,8 +61,6 @@ const test = function () {
 	},1000)
 }
 
-test1();
-
 module.exports = {
 	run
 }
