@@ -13,18 +13,21 @@ confObj
 	script;script to execute to retrive list of urls
 	ip;ip address of the browser to run in default
 	ci_ip;ip address of the browser to if run in ci
+	folderPrefix;prefix for thr folder when creating screenshots
 }
 */
 
 const run = function(confObj) {
 	var url = confObj.url;
-
+	var folderPrefix = "uitest_";
 	if (process.env.CI_BUILD_ID != undefined) {
 		url = confObj.ci_url;
 	}
-
+	if (confObj.folderPrefix != undefined) {
+		folderPrefix = confObj.folderPrefix;
+	}
 	var isTest = (confObj.mode == "test");
-	var folderName = isTest ? "test" : "reference";
+	var folderName = isTest ? folderPrefix+"test" : folderPrefix+"reference";
 
 	chrome.init(confObj);
 	var driver = chrome.getBrowser(url);
@@ -43,11 +46,11 @@ const run = function(confObj) {
 	})
 }
 const test = function () {
-	var testFolderName = process.env.PWD+path.sep+"test";
-	var refFolderName = process.env.PWD+path.sep+"reference";
-	var diffFolderName = process.env.PWD+path.sep+"diff";
+	var testFolderName = process.env.PWD+path.sep+folderPrefix+"test";
+	var refFolderName = process.env.PWD+path.sep+folderPrefix+"reference";
+	var diffFolderName = process.env.PWD+path.sep+folderPrefix+"diff";
 
-	var allFile = fs.readdirSync(process.env.PWD+path.sep+"test");
+	var allFile = fs.readdirSync(testFolderName);
 	var tmpRes = [];
 	var testRes = allFile.map(function (i,j) {
 		var res = imgCompare.getDiff(testFolderName+path.sep+i,refFolderName+path.sep+i,diffFolderName+path.sep+i,tmpRes);
