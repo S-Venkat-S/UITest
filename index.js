@@ -4,6 +4,8 @@ var sleep = require("sleep");
 var path = require("path");
 var fs = require("fs");
 
+var folderPrefix = "uitest_";
+
 /*
 confObj
 {
@@ -19,7 +21,6 @@ confObj
 
 const run = function(confObj) {
 	var url = confObj.url;
-	var folderPrefix = "uitest_";
 	if (process.env.CI_BUILD_ID != undefined) {
 		url = confObj.ci_url;
 	}
