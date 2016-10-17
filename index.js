@@ -34,7 +34,6 @@ const run = function(confObj) {
 	var driver = chrome.getBrowser(url);
 	chrome.executeScript(driver,confObj.script).then(function (urls) {
 		for (var i=0;i<urls.length;i++) {
-			console.log(urls[i],"----->>>>---->>>>")
 			chrome.openUrl(driver,urls[i]);
 			var fileName = urls[i].split("?")[1];
 			chrome.takeScreenshot(driver,folderName,fileName)
@@ -53,8 +52,14 @@ const test = function () {
 
 	var allFile = fs.readdirSync(testFolderName);
 	var tmpRes = [];
+	var newlyAddedFiles = [];
 	var testRes = allFile.map(function (i,j) {
-		var res = imgCompare.getDiff(testFolderName+path.sep+i,refFolderName+path.sep+i,diffFolderName+path.sep+i,tmpRes);
+		if (fs.existsSync(refFolderName+path.sep+i)) {
+			var res = imgCompare.getDiff(testFolderName+path.sep+i,refFolderName+path.sep+i,diffFolderName+path.sep+i,tmpRes);
+		}
+		else {
+			newlyAddedFiles.push(refFolderName+path.sep+i);
+		}
 	})
 	var interval = null;
 	interval = setInterval(function () {
