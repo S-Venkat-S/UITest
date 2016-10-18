@@ -19,7 +19,7 @@ confObj
 }
 */
 
-const run = function(confObj) {
+const run = function(confObj,callBack) {
 	var url = confObj.url;
 	if (process.env.CI_BUILD_ID != undefined) {
 		url = confObj.ci_url;
@@ -33,6 +33,7 @@ const run = function(confObj) {
 	chrome.init(confObj);
 	var driver = chrome.getBrowser(url);
 	chrome.executeScript(driver,confObj.script).then(function (urls) {
+		console.log(urls)
 		for (var i=0;i<urls.length;i++) {
 			chrome.openUrl(driver,urls[i]);
 			var fileName = urls[i].split("?")[1];
@@ -40,12 +41,12 @@ const run = function(confObj) {
 		}
 		driver.quit().then(function () {
 			if (isTest) {
-				test();
+				test(callBack);
 			}
 		});
 	})
 }
-const test = function () {
+const test = function (callBack) {
 	var testFolderName = process.env.PWD+path.sep+folderPrefix+"test";
 	var refFolderName = process.env.PWD+path.sep+folderPrefix+"reference";
 	var diffFolderName = process.env.PWD+path.sep+folderPrefix+"diff";
@@ -54,18 +55,21 @@ const test = function () {
 	var tmpRes = [];
 	var newlyAddedFiles = [];
 	var testRes = allFile.map(function (i,j) {
-		if (fs.existsSync(refFolderName+path.sep+i)) {
-			var res = imgCompare.getDiff(testFolderName+path.sep+i,refFolderName+path.sep+i,diffFolderName+path.sep+i,tmpRes);
-		}
-		else {
+		var res = imgCompare.getDiff(testFolderName+path.sep+i,refFolderName+path.sep+i,diffFolderName+path.sep+i,tmpRes);
+		if (!fs.existsSync(refFolderName+path.sep+i)) {
 			newlyAddedFiles.push(refFolderName+path.sep+i);
 		}
 	})
+	console.log(newlyAddedFiles);
 	var interval = null;
 	interval = setInterval(function () {
 		if (allFile.length == tmpRes.length) {
-			console.log("IntervalCleared...",tmpRes);
+			// console.log("IntervalCleared...",tmpRes);
 			clearInterval(interval);
+			var resObj = {};
+			resObj.result = tmpRes;
+			resObj.newFiles = newlyAddedFiles;
+			callBack(resObj);
 		}
 	},1000)
 }

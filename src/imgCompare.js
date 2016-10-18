@@ -14,16 +14,16 @@ const getDiff = function(mainFile, testFile, diffFile,res) {
     }
     var differ = new imageDiff.ImageDiff();
     differ.fullDiff(options, function (err,result) {
-    		res.push(result);
+    		res.push(Object.assign({},result,options));
 		if (err) {
-			console.log(chalk.red(err))
+			// console.log(chalk.red(err))
 			return false;
 		}
 		if (result.percentage) {
-			console.log(chalk.red.bold("\u2715 : "+testFile),"\n\t",result);
+			// console.log(chalk.red.bold("\u2715 : "+testFile),"\n\t",result);
 			return false;
 		}
-		console.log(chalk.green.bold("\u2714 : "+testFile))
+		// console.log(chalk.green.bold("\u2714 : "+testFile))
 		return true;
 	});
 }
