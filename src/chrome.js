@@ -13,10 +13,10 @@ const init = function (confObj) {
 }
 
 const getBrowser = function (url) {
-	var driver = new webdriver.Builder().withCapabilities({'proxy': {proxyType:"manual",httpProxy:'http://192.168.65.20:80'},'browser':'chrome' }).forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
-	// var driver = new webdriver.Builder().forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
+	// var driver = new webdriver.Builder().withCapabilities({'proxy': {proxyType:"manual",httpProxy:'http://192.168.65.20:80'},'browser':'chrome' }).forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
+	var driver = new webdriver.Builder().forBrowser('chrome').usingServer('http://'+ipAddress+':4444/wd/hub').build();
 	driver.get(url).then(function (res) {
-		
+		console.log(url);	
 	});
 	var height = driver.executeScript("return screen.height;").then(function (res) {
 		return res;
