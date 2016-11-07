@@ -30,7 +30,8 @@ const getBrowser = function (url) {
 
 const openUrl = function (driver,url) {
 	driver.get(url).then(function () {
-		sleep.sleep(5);
+// 		sleep.sleep(5);
+		console.log(url);
 	});
 }
 
